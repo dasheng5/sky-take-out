@@ -36,4 +36,6 @@ public interface EmployeeMapper {
     * 根据主键动态修改属性
     * */
     void update(Employee employee);
+
+    Employee getById(Long id);
 }
