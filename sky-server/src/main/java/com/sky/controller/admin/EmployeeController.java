@@ -13,6 +13,7 @@ import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,7 +77,7 @@ public class EmployeeController {
     * 新增员工
     * */
     @PostMapping
-    @ApiOperation("")//描述
+    @ApiOperation("新增员工方法")//描述
     public Result save(@RequestBody EmployeeDTO employeeDTO) {
         log.info("新增员工：{}", employeeDTO);
         System.out.println("当前线程id：" + Thread.currentThread().getId());
@@ -92,4 +93,11 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用员工账号")
+    public Result startOrStop(@PathVariable("status") Integer status, Long id) {
+        log.info("启用禁用员工账号：{}, {}", status, id);
+        employeeService.startOrStop(status, id);
+        return Result.success();
+    }
 }
