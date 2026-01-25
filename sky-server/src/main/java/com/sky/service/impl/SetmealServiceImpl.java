@@ -1,0 +1,56 @@
+package com.sky.service.impl;
+
+/**
+ * @ author Mr.Gu
+ * @ (￣＾￣)
+ * @ date: 2026/1/25
+ * @ time: 16:01
+ * @ description:
+ */
+
+import com.sky.dto.SetmealDTO;
+import com.sky.entity.Setmeal;
+import com.sky.entity.SetmealDish;
+import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
+import com.sky.service.SetmealService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 套餐业务实现
+ */
+@Service
+@Slf4j
+public class SetmealServiceImpl implements SetmealService {
+    @Autowired
+    private SetmealMapper setmealMapper;
+    @Autowired
+    private SetmealDishMapper setmealDishMapper;
+
+    /**
+     * 新增套餐，同时需要保存套餐和菜品的关联关系
+     * @param setmealDTO
+     */
+    @Override
+
+    public void saveWithDish(SetmealDTO setmealDTO) {
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+        //向套餐表插入数据
+        setmealMapper.insert(setmeal);
+        //获取生成的套餐id
+        Long setmealId = setmeal.getId();
+        //更新菜品的套餐id
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes.forEach(setmealDish -> {
+            setmealDish.setSetmealId(setmealId);
+        });
+        //在关联表保存套餐和菜品的关联关系
+        setmealDishMapper.insertBatch(setmealDishes);
+    }
+}
