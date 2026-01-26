@@ -41,5 +41,6 @@ public interface SetmealMapper {
     /*
     * 修改套餐
     * */
+    @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);
 }
